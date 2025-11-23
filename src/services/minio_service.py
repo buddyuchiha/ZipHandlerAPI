@@ -26,18 +26,17 @@ class MinioService:
         
         self.make_bucket()
         
-    async def make_bucket(self) -> None:
+    def make_bucket(self) -> None:
         if not self.client.bucket_exists(self.bucket_name):
             self.client.make_bucket(self.bucket_name)
-            
-            logger.info(
-            f"Created bucket with name: {self.bucket_name}"
-            )
-            
-    async def put_file(self, file_data: BytesIO, file_name: str, file_size: int) -> None:        
         
+        logger.info(
+        f"Created bucket with name: {self.bucket_name}"
+        )
+            
+    async def put_file(self, file_data: BytesIO, file_name: str, file_size: int) -> None:                
         self.client.put_object(
-            bucket_name="testbucket",
+            bucket_name=str(self.bucket_name),
             object_name=file_name,
             data=file_data,
             content_type="application/pdf",
