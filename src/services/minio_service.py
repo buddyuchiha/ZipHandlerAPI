@@ -3,14 +3,16 @@ from io import BytesIO
 
 from minio import Minio 
 
+from core.config import settings
 from core.logging import logger
 
 class MinioService:
     
     def __init__(self) -> None:
-        self.minio_url = "localhost:9000"
-        self.access_key = "minioadmin"
-        self.secret_key = "minioadmin"
+        self.minio_url = str(settings.MINIO_URL) + ":" + \
+            str(settings.MINIO_API_PORT)
+        self.access_key = settings.MINIO_ACCESS_KEY
+        self.secret_key = settings.MINIO_SECRET_KEY
         self.bucket_name = datetime.now().strftime("%Y%m%d")
         
         self.client = Minio(
@@ -36,7 +38,7 @@ class MinioService:
             
     async def put_file(self, file_data: BytesIO, file_name: str, file_size: int) -> None:                
         self.client.put_object(
-            bucket_name=str(self.bucket_name),
+            bucket_name=self.bucket_name,
             object_name=file_name,
             data=file_data,
             content_type="application/pdf",

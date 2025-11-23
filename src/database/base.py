@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, registry
 from sqlalchemy.dialects.postgresql import UUID
 
-engine = create_async_engine(
-    "postgresql+asyncpg://postgres:postgres@localhost:5434/postgres"
-    )
+from core.config import settings
+
+engine = create_async_engine(settings.APP_POSTGRES_URL)
 session = async_sessionmaker(engine, expire_on_commit=False)
 
 

@@ -3,11 +3,11 @@ services:
     image: postgres:17
     container_name: postgres_app
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: "${APP_POSTGRES_DB}"
+      POSTGRES_USER: "${APP_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${APP_POSTGRES_PASSWORD}"
     ports:
-      - "5434:5432"
+      - "${APP_POSTGRES_PORT}:5432"
     volumes:
       - postgres_app_data:/var/lib/postgresql/data 
 
@@ -15,11 +15,11 @@ services:
     image: postgres:17
     container_name: postgres_keycloak
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: "${KC_POSTGRES_DB}"
+      POSTGRES_USER: "${KC_POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${KC_POSTGRES_PASSWORD}"
     ports:
-      - "5433:5432"
+      - "${KC_POSTGRES_PORT}:5432"
     volumes:
       - postgres_keycloak_data:/var/lib/postgresql/data
     networks:
@@ -30,11 +30,11 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"   
-      - "9001:9001"    
+      - "${MINIO_API_PORT}:9000"   
+      - "${MINIO_PORT}:9001"    
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: "${MINIO_ACCESS_KEY}"
+      MINIO_ROOT_PASSWORD: "${MINIO_SECRET_KEY}"
     volumes:
       - ./minio_data:/data
 
@@ -45,14 +45,14 @@ services:
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: postgres_keycloak
-      KC_DB_URL_DATABASE: postgres
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: postgres
-      KC_HOSTNAME: localhost
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB_URL_DATABASE: "${KC_POSTGRES_DB}"
+      KC_DB_USERNAME: "${KC_POSTGRES_USER}"
+      KC_DB_PASSWORD: "${KC_DB_PASSWORD}"
+      KC_HOSTNAME: "${KC_HOSTNAME}"
+      KEYCLOAK_ADMIN: "${KC_ADMIN}"
+      KEYCLOAK_ADMIN_PASSWORD: "${KC_ADMIN_PASSWORD}"
     ports:
-      - "9090:8080"
+      - "${KC_PORT}:8080"
     depends_on:
       - postgres_keycloak
     networks:
