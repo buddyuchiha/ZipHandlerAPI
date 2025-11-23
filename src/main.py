@@ -1,11 +1,10 @@
 from contextlib import asynccontextmanager
-from fastapi import Depends,FastAPI, UploadFile
-from io import BytesIO
+from fastapi import FastAPI
 import uvicorn
 
+from api.endpoints.tasks import tasks_router
 from core.config import settings
 from core.logging import logger
-from dependencies.minio import get_minio_service
 
 @asynccontextmanager
 async def app_lifespan(app: FastAPI):
@@ -16,23 +15,7 @@ async def app_lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=app_lifespan)
 
-@app.post("/upload")
-async def upload_file(
-    file: UploadFile, 
-    minio = Depends(get_minio_service)
-    ) -> dict:
-    file_data = BytesIO(await file.read())
-
-    content = await file.read()
-    
-     
-    await minio.put_file(
-        file_data,
-        file.filename,
-        len(content)
-    )
-    
-    return {"filename" : file.filename}
+app.include_router(tasks_router)
 
 
 if __name__ == "__main__":
