@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from io import BytesIO
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 
 from api.dependencies.minio import get_minio_service
 
 tasks_router = APIRouter()
-
 
 @tasks_router.post("/upload")
 async def upload_file(

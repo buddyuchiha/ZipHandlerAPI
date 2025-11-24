@@ -1,0 +1,36 @@
+{
+  "id": "zip-checker",
+  "realm": "zip-checker",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "zip-service",
+      "name": "ZIP Checker Service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "fixed-client-secret-for-dev",
+      "redirectUris": ["http://127.0.0.1:8000/docs/oauth2-redirect"],
+      "webOrigins": ["http://127.0.0.1:8000"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "email": "test@example.com",
+      "firstName": "Test",
+      "lastName": "User",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "testpass123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["default-roles-zip-checker"]
+    }
+  ]
+}

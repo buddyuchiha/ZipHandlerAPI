@@ -22,6 +22,11 @@ class Settings(BaseSettings):
     KC_ADMIN_PASSWORD: str 
     KC_HOSTNAME: str 
     KC_PORT: int
+    KC_CLIENT_ID:str
+    KC_CLIENT_SECRET: str
+    KC_USER: str
+    KC_USER_PASS: str
+    KC_REALM: str
     
     MINIO_URL: str
     MINIO_ACCESS_KEY: str
