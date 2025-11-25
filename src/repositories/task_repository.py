@@ -2,7 +2,7 @@ from sqlalchemy import select, delete, update
 
 from models.models import TasksORM
 
-class TasksReposity:
+class TasksRepository:
     def __init__(self, session) -> None:
         self.session = session
         
