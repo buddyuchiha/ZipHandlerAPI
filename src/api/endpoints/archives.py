@@ -4,7 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 
 from api.dependencies.minio import get_minio_service
 from api.dependencies.auth import get_current_user
+from api.dependencies.database import get_tasks_repository
 from core.logging import logger
+from repositories.task_repository import TasksReposity
 from services.file_service import FileService
 from services.task_service import TaskService
 
@@ -21,24 +23,24 @@ archive_router = APIRouter(
 async def upload_file(
     file: UploadFile, 
     minio = Depends(get_minio_service), 
-    user = Depends(get_current_user)
+    user = Depends(get_current_user),
+    db: TasksReposity = Depends(get_tasks_repository)
     ) -> dict:
     await FileService.handle_file(file)
+    
+    await TaskService.handle_task(file, minio, user, db)
+    
+    return {"msg" : "all okay"}
 
-    print(user)
+@archive_router.get(
+    "/results/{task_id}",
+    summary="Get Result after handling", 
+    tags=["Archive Router Endpoints"]
+    )
+async def get_results(
+    task_id: str, 
+    db: TasksReposity = Depends(get_tasks_repository) 
+    ): 
+    result = await TaskService.get_result(task_id, db)
     
-    # return {"msg" : "all okay"}
-    
-    await TaskService.create_task(file, minio, user)
-    
-    # file_data = await file.read()
-
-    # content = BytesIO(file_data)
-    
-    # await minio.put_file(
-    #     content,
-    #     file.filename,
-    #     len(file_data)
-    # )
-
-    # return {"filename" : file.filename}
+    return result
