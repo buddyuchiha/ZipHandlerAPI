@@ -3,6 +3,7 @@ from fastapi.security import OAuth2AuthorizationCodeBearer
 from core.auth import keycloak_openid, oauth2_scheme
 import requests
 
+
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     try:
         token_info = keycloak_openid.introspect(token)

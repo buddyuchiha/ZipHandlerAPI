@@ -1,10 +1,9 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 import uvicorn
 
-from api.endpoints.tasks import tasks_router
-from api.dependencies.auth import get_current_user
+from api.endpoints.archives import archive_router
 from core.config import settings
 from core.logging import logger
 
@@ -14,18 +13,9 @@ async def app_lifespan(app: FastAPI):
     yield
     logger.info("ZipHandlerAPI stopped")
 
-
 app = FastAPI(lifespan=app_lifespan)
 
-app.include_router(tasks_router)
-
-@app.get("/")
-async def keycloak_test():
-    pass 
-
-@app.get("/user")  
-async def current_users(user: dict = Depends(get_current_user)):
-    return user
+app.include_router(archive_router)
 
 if __name__ == "__main__":
     uvicorn.run(

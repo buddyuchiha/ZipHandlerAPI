@@ -1,19 +1,22 @@
-from keycloak import KeycloakOpenID
 from fastapi.security import HTTPBearer, OAuth2AuthorizationCodeBearer
+from keycloak import KeycloakOpenID
 
-keycloak_server_url = "http://localhost:9090"
-realm_name = "zip-checker"
+from core.config import settings
+
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=f"{keycloak_server_url}/realms/{realm_name}/protocol/openid-connect/auth",
-    tokenUrl=f"{keycloak_server_url}/realms/{realm_name}/protocol/openid-connect/token",
+    authorizationUrl=f"{settings.get_kc_url()}/realms/"
+                     f"{settings.KC_REALM}/protocol/openid-connect/auth",
+    tokenUrl=f"{settings.get_kc_url()}/realms/"
+             f"{settings.KC_REALM}/protocol/openid-connect/token",
 )
 
 keycloak_openid = KeycloakOpenID(
-    server_url=keycloak_server_url,
-    realm_name=realm_name,
-    client_id="zip-service",
-    client_secret_key="fixed-client-secret-for-dev",
+    server_url=settings.get_kc_url(),
+    realm_name=settings.KC_REALM,
+    client_id=settings.KC_CLIENT_ID,
+    client_secret_key=settings.KC_CLIENT_SECRET,
     verify=True
 )
+
 security = HTTPBearer()

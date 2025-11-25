@@ -46,5 +46,8 @@ class MinioService:
             length=file_size
         )
         
+        logger.info(
+            f"Added file {file_name} with len {file_size} to the MinIO"
+            )
         
     
