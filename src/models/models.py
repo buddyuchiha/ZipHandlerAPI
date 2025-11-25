@@ -1,7 +1,6 @@
 from datetime import datetime
-from uuid import UUID, uuid4
-from sqlalchemy import Enum, func, JSON, DateTime, text
-from sqlalchemy.dialects.postgresql import UUID as UUIDType
+from sqlalchemy import Enum, func, JSON, DateTime
+from sqlalchemy.dialects.postgresql import UUID 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.enums import TaskStatus
@@ -11,17 +10,10 @@ from database.base import Base
 class TasksORM(Base):
     __tablename__ = "tasks"
     
-    id: Mapped[UUID] = mapped_column(
-        UUIDType(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()")
+    id: Mapped[str] = mapped_column(
+        primary_key=True
         )
-    user_id: Mapped[UUID]  = mapped_column(
-        UUIDType(as_uuid=True),
-        default=uuid4,
-        nullable=True,
-        )
+    user_id: Mapped[str]
     status: Mapped[str] = mapped_column(
         Enum(TaskStatus), 
         default=TaskStatus.PENDING

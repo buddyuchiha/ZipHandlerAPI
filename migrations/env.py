@@ -10,6 +10,7 @@ sys.path.append(os.path.join(sys.path[0], 'src'))
 
 from models.models import TasksORM
 from database.base import Base
+from core.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,10 +28,8 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 config.set_main_option(
-    "sqlalchemy.url",
-    "postgresql+asyncpg://postgres:postgres@localhost:5434/postgres" \
-        + "?async_fallback=True"
-        )
+    "sqlalchemy.url", settings.APP_POSTGRES_URL + "?async_fallback=True"
+    )
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

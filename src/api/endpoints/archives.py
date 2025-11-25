@@ -5,6 +5,8 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from api.dependencies.minio import get_minio_service
 from api.dependencies.auth import get_current_user
 from core.logging import logger
+from services.file_service import FileService
+from services.task_service import TaskService
 
 
 archive_router = APIRouter(
@@ -19,16 +21,24 @@ archive_router = APIRouter(
 async def upload_file(
     file: UploadFile, 
     minio = Depends(get_minio_service), 
-    used = Depends(get_current_user)
+    user = Depends(get_current_user)
     ) -> dict:
-    file_data = await file.read()
+    await FileService.handle_file(file)
 
-    content = BytesIO(file_data)
+    print(user)
     
-    await minio.put_file(
-        content,
-        file.filename,
-        len(file_data)
-    )
+    # return {"msg" : "all okay"}
+    
+    await TaskService.create_task(file, minio, user)
+    
+    # file_data = await file.read()
 
-    return {"filename" : file.filename}
+    # content = BytesIO(file_data)
+    
+    # await minio.put_file(
+    #     content,
+    #     file.filename,
+    #     len(file_data)
+    # )
+
+    # return {"filename" : file.filename}

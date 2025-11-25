@@ -5,8 +5,11 @@ class AppSettings(BaseSettings):
     APP_HOST: str 
     APP_PORT: int
     LOGGING_FILE: str
+    FILE_SIZE: int
     
-    
+    def calculate_file_size(self):
+        return self.FILE_SIZE * 1024 * 1024
+        
 class DatabaseSettings(BaseSettings):
     APP_POSTGRES_DB: str
     APP_POSTGRES_USER: str
