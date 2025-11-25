@@ -21,14 +21,14 @@ async def upload_file(
     minio = Depends(get_minio_service), 
     used = Depends(get_current_user)
     ) -> dict:
-    file_data = BytesIO(await file.read())
+    file_data = await file.read()
 
-    content = await file.read()
+    content = BytesIO(file_data)
     
     await minio.put_file(
-        file_data,
+        content,
         file.filename,
-        len(content)
+        len(file_data)
     )
 
     return {"filename" : file.filename}
