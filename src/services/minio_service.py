@@ -35,19 +35,23 @@ class MinioService:
             f"Created bucket with name: {self.bucket_name}"
             )
             
-    async def put_file(self, file_data: BytesIO, file_name: str, file_size: int) -> None:                
+    async def put_file(self, file) -> None:                
         self.make_bucket()
+        
+        file_data = await file.read()
+        file_size = len(file_data)
+        content = BytesIO(file_data)
         
         self.client.put_object(
             bucket_name=self.bucket_name,
-            object_name=file_name,
-            data=file_data,
+            object_name=file.filename,
+            data=content,
             content_type="application/zip",
             length=file_size
         )
         
         logger.info(
-            f"Added file {file_name} with len {file_size} to the MinIO"
+            f"Added file {file.filename} with len {file_size} to the MinIO"
             )
         
     

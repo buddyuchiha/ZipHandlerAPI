@@ -39,19 +39,8 @@ class FileService:
                 )
     
     @staticmethod
-    async def handle_file(file: UploadFile):
-        FileService.check_format(file)
-        
-        file_data = await file.read()        
+    async def handle_file(file: UploadFile, file_data: bytes, content: bytes):
+        FileService.check_format(file)      
         FileService.check_size(file_data)
-        
-        content = BytesIO(file_data) 
+        content = BytesIO(file_data)
         FileService.check_integrity(content)
-        
-        content.seek(0)
-
-        # await minio.put_file(
-        #     content,
-        #     file.filename,
-        #     len(file_data)
-        # )  

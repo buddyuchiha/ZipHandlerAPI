@@ -2,10 +2,10 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.session import get_db
-from repositories.task_repository import TasksReposity
+from repositories.task_repository import TasksRepository
 
 
 async def get_tasks_repository(
-    session: AsyncSession =Depends(get_db)
+    session: AsyncSession=Depends(get_db)
     ) -> AsyncSession:
-    return TasksReposity(session)
+    return TasksRepository(session)
