@@ -10,10 +10,11 @@ from schemas.dummy import (
 
 
 class DummyAnalysisService:  
+    """Dummy service for code analysis simulation"""
+    
     @staticmethod
-    async def get_bugs(
-        file_content: bytes
-        ) -> BugsScheme:
+    async def get_bugs(file_content: bytes) -> BugsScheme:
+        """Generate random bugs analysis"""
         await asyncio.sleep(0.5)
         
         return BugsScheme(
@@ -24,9 +25,8 @@ class DummyAnalysisService:
         )
      
     @staticmethod   
-    async def get_code_smells(
-        file_content: bytes
-        ) -> CodeSmellsScheme:
+    async def get_code_smells(file_content: bytes) -> CodeSmellsScheme:
+        """Generate random code smells analysis"""
         await asyncio.sleep(0.5)
         
         return CodeSmellsScheme(
@@ -39,7 +39,8 @@ class DummyAnalysisService:
     @staticmethod
     async def get_vulnerabilities(
         file_content: bytes
-        ) -> VulnerabilitiesScheme:
+    ) -> VulnerabilitiesScheme:
+        """Generate random security vulnerabilities"""
         await asyncio.sleep(0.5)
         
         return VulnerabilitiesScheme(
@@ -50,9 +51,8 @@ class DummyAnalysisService:
         )
         
     @staticmethod
-    async def analyze_sonarqube(
-        file_content: bytes
-        ) -> SonarqubeResultScheme:
+    async def analyze_sonarqube(file_content: bytes) -> SonarqubeResultScheme:
+        """Perform complete SonarQube analysis simulation"""
         bugs, code_smells, vulnreabilities= await asyncio.gather(
             DummyAnalysisService.get_bugs(file_content),
             DummyAnalysisService.get_code_smells(file_content),

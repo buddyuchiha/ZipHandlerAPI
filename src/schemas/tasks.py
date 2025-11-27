@@ -1,16 +1,16 @@
 from pydantic import BaseModel
 
-from fastapi import UploadFile, File
-from minio import Minio
-
-from core.enums import TaskStatus
 from schemas.dummy import SonarqubeResultScheme
 
   
 class ResultResponseScheme(BaseModel):
+    """Analysis results response"""
+    
     status: str
     results: SonarqubeResultScheme
     
     
 class UploadFileResponseScheme(BaseModel):
+    """File upload response"""
+    
     task_id: str

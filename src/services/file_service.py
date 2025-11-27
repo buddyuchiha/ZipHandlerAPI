@@ -4,10 +4,15 @@ from zipfile import ZipFile
 from fastapi import UploadFile, HTTPException
 
 from core.config import settings
+from core.logging import logger
+
 
 class FileService:
+    """Service for file validation operations"""
+    
     @staticmethod
     def check_integrity(content: BytesIO) -> None:
+        """Check ZIP file integrity"""
         try:
             with ZipFile(content, 'r') as zip_obj:
                 corrupt_file = zip_obj.testzip()
@@ -24,14 +29,16 @@ class FileService:
             
     @staticmethod
     def check_size(file_data: bytes) -> None:
+        """Check file size limit"""
         if len(file_data) > settings.calculate_file_size():
             raise HTTPException(
                 status_code=400,
-                detail=f"File must be > {settings.calculate_file_size()}"
+                detail="File size must be < 100 MB"
                 )
     
     @staticmethod
     def check_format(file: UploadFile) -> None:
+        """Check file format is ZIP"""
         if not file.filename.endswith(".zip"):
             raise HTTPException(
                 status_code=400,
@@ -39,8 +46,15 @@ class FileService:
                 )
     
     @staticmethod
-    async def handle_file(file: UploadFile, file_data: bytes, content: bytes):
+    async def handle_file(
+        file: UploadFile,
+        file_data: bytes,
+        content: bytes
+    ) -> None:
+        """Handle file validation process"""
         FileService.check_format(file)      
         FileService.check_size(file_data)
         content = BytesIO(file_data)
         FileService.check_integrity(content)
+        
+        logger.info(f"Handled file {file.filename}")

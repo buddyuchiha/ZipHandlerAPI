@@ -7,5 +7,6 @@ from repositories.task_repository import TasksRepository
 
 async def get_tasks_repository(
     session: AsyncSession=Depends(get_db)
-    ) -> AsyncSession:
+) -> TasksRepository:
+    """Creates and returns TasksRepository"""
     return TasksRepository(session)

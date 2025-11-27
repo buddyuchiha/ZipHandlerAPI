@@ -1,4 +1,4 @@
-from fastapi.security import HTTPBearer, OAuth2AuthorizationCodeBearer
+from fastapi.security import OAuth2AuthorizationCodeBearer
 from keycloak import KeycloakOpenID
 
 from core.config import settings
@@ -18,5 +18,3 @@ keycloak_openid = KeycloakOpenID(
     client_secret_key=settings.KC_CLIENT_SECRET,
     verify=True
 )
-
-security = HTTPBearer()

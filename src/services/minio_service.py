@@ -6,7 +6,10 @@ from minio import Minio
 from core.config import settings
 from core.logging import logger
 
+
 class MinioService:
+    """Service for MinIO file storage operations"""
+    
     def __init__(self) -> None:
         self.minio_url = self.minio_url = \
             f"{settings.MINIO_URL}:{settings.MINIO_API_PORT}"
@@ -28,6 +31,7 @@ class MinioService:
         self.make_bucket()
         
     def make_bucket(self) -> None:
+        """Create bucket if not exists"""
         if not self.client.bucket_exists(self.bucket_name):
             self.client.make_bucket(self.bucket_name)
         
@@ -35,23 +39,21 @@ class MinioService:
             f"Created bucket with name: {self.bucket_name}"
             )
             
-    async def put_file(self, file) -> None:                
+    async def put_file(self, file) -> None:
+        """Upload file to MinIO storage"""                
         self.make_bucket()
         
         file_data = await file.read()
-        file_size = len(file_data)
-        content = BytesIO(file_data)
         
         self.client.put_object(
             bucket_name=self.bucket_name,
             object_name=file.filename,
-            data=content,
+            data=BytesIO(file_data),
             content_type="application/zip",
-            length=file_size
+            length=len(file_data)
         )
         
         logger.info(
-            f"Added file {file.filename} with len {file_size} to the MinIO"
+            f"Added file {file.filename} with len"
+            f" {len(file_data)} to the MinIO"
             )
-        
-    

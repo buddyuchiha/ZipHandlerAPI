@@ -2,15 +2,20 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppSettings(BaseSettings):
+    """Application host and file settings"""
+ 
     APP_HOST: str 
     APP_PORT: int
     LOGGING_FILE: str
     FILE_SIZE: int
     
-    def calculate_file_size(self):
+    def calculate_file_size(self) -> int:
+        """Calculate file size in bytes"""
         return self.FILE_SIZE * 1024 * 1024
         
 class DatabaseSettings(BaseSettings):
+    """Main application database configuration"""
+    
     APP_POSTGRES_DB: str
     APP_POSTGRES_USER: str
     APP_POSTGRES_PASSWORD: str
@@ -19,6 +24,8 @@ class DatabaseSettings(BaseSettings):
 
 
 class KeycloakSettings(BaseSettings):
+    """Keycloak authentication service settings"""
+    
     KC_POSTGRES_DB: str
     KC_POSTGRES_USER: str
     KC_POSTGRES_PASSWORD: str
@@ -35,10 +42,13 @@ class KeycloakSettings(BaseSettings):
     KC_REALM: str
     
     def get_kc_url(self) -> str:
+        """Get Keycloak server URL"""
         return f"http://{self.KC_HOSTNAME}:{self.KC_PORT}"
     
     
 class MinioSettings(BaseSettings):
+    """MinIO file storage settings"""
+    
     MINIO_URL: str
     MINIO_ACCESS_KEY: str
     MINIO_SECRET_KEY: str
@@ -52,6 +62,8 @@ class Settings(
     KeycloakSettings,
     MinioSettings
     ):
+    """Main application settings"""
+    
     model_config = SettingsConfigDict(
         env_file=(".env"),
         case_sensitive=False

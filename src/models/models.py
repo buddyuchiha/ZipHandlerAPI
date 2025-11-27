@@ -1,6 +1,6 @@
 from datetime import datetime
+
 from sqlalchemy import Enum, func, JSON, DateTime
-from sqlalchemy.dialects.postgresql import UUID 
 from sqlalchemy.orm import Mapped, mapped_column
 
 from core.enums import TaskStatus
@@ -8,6 +8,8 @@ from database.base import Base
 
 
 class TasksORM(Base):
+    """ORM Class to describe the table"""
+    
     __tablename__ = "tasks"
     
     id: Mapped[str] = mapped_column(
