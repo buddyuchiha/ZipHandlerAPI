@@ -47,8 +47,9 @@ class TaskService:
 
         await db.update_status(id, TaskStatus.IN_PROGRESS)
 
+        FileService.handle_file(file, file_data, content)
+
         *_, result = await asyncio.gather(
-            FileService.handle_file(file, file_data, content),
             db.create(id, user),
             minio.put_file(file), 
             DummyAnalysisService.analyze_sonarqube(file_data), 

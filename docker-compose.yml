@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres_app:
     image: postgres:17
@@ -9,7 +11,9 @@ services:
     ports:
       - "${APP_POSTGRES_PORT}:5432"
     volumes:
-      - postgres_app_data:/var/lib/postgresql/data 
+      - postgres_app_data:/var/lib/postgresql/data
+    networks:
+      - app_net
 
   postgres_keycloak:
     image: postgres:17
@@ -23,7 +27,7 @@ services:
     volumes:
       - postgres_keycloak_data:/var/lib/postgresql/data
     networks:
-      - keycloak_net
+      - app_net
 
   minio:
     image: minio/minio:latest
@@ -36,7 +40,9 @@ services:
       MINIO_ROOT_USER: "${MINIO_ACCESS_KEY}"
       MINIO_ROOT_PASSWORD: "${MINIO_SECRET_KEY}"
     volumes:
-      - ./minio_data:/data
+      - minio_data:/data
+    networks:
+      - app_net
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.2
@@ -58,13 +64,51 @@ services:
     volumes:
       - ./keycloak_setup:/opt/keycloak/data/import
     networks:
-      - keycloak_net
+      - app_net
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zip_checker_app
+    ports:
+      - "${APP_PORT}:8000"
+    environment:
+      - APP_POSTGRES_URL=postgresql+asyncpg://${APP_POSTGRES_USER}:${APP_POSTGRES_PASSWORD}@postgres_app:5432/${APP_POSTGRES_DB}
+      - APP_POSTGRES_PORT=5432
+      - KC_POSTGRES_URL=postgresql+asyncpg://${KC_POSTGRES_USER}:${KC_POSTGRES_PASSWORD}@postgres_keycloak:5432/${KC_POSTGRES_DB}
+      - KC_POSTGRES_PORT=5432
+      - KC_HOSTNAME=keycloak
+      - KC_PORT=8080
+      - MINIO_URL=minio
+      - MINIO_PORT=9001
+      - MINIO_API_PORT=9000
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+    depends_on:
+      - postgres_app
+      - postgres_keycloak
+      - minio
+      - keycloak
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 20 &&
+        echo 'Running migrations...' &&
+        alembic -c /app/alembic.ini upgrade head &&
+        echo 'Starting application...' &&
+        python src/main.py
+      "
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - app_net
 
 volumes:
   postgres_keycloak_data:
   postgres_app_data:
-  keycloak_setup:
+  minio_data:
 
 networks:
-  keycloak_net:
+  app_net:
+    driver: bridge

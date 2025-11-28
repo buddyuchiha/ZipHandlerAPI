@@ -5,9 +5,9 @@ from core.config import settings
 
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl=f"{settings.get_kc_url()}/realms/"
+    authorizationUrl=f"http://localhost:{settings.KC_PORT}/realms/"
                      f"{settings.KC_REALM}/protocol/openid-connect/auth",
-    tokenUrl=f"{settings.get_kc_url()}/realms/"
+    tokenUrl=f"http://localhost:{settings.KC_PORT}/realms/"
              f"{settings.KC_REALM}/protocol/openid-connect/token",
 )
 

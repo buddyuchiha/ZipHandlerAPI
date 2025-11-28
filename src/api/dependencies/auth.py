@@ -16,7 +16,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict[str]:
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials"
+            detail=f"Invalid authentication credentials, {e}"
         )
         
     return token_info["sub"]

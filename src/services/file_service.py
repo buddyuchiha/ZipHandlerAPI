@@ -46,7 +46,7 @@ class FileService:
                 )
     
     @staticmethod
-    async def handle_file(
+    def handle_file(
         file: UploadFile,
         file_data: bytes,
         content: bytes
