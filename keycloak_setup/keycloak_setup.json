@@ -10,8 +10,14 @@
       "protocol": "openid-connect",
       "publicClient": false,
       "secret": "fixed-client-secret-for-dev",
-      "redirectUris": ["http://127.0.0.1:8000/docs/oauth2-redirect"],
-      "webOrigins": ["http://127.0.0.1:8000"],
+      "redirectUris": [
+        "http://localhost:8000/docs/oauth2-redirect",
+        "http://127.0.0.1:8000/docs/oauth2-redirect"
+      ],
+      "webOrigins": [
+        "http://localhost:8000",
+        "http://127.0.0.1:8000"
+      ],
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": true
     }
