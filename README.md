@@ -73,7 +73,9 @@
 
 <img width="847" height="29" alt="image" src="https://github.com/user-attachments/assets/e2c9d6c7-f0c1-44e4-95da-93c297163885" />
 
-6) Перейти на http://127.0.0.1:8000/docs
+6) Выполнить команду python src/main.py и перейти на http://127.0.0.1:8000/docs
+
+<img width="787" height="114" alt="image" src="https://github.com/user-attachments/assets/7c43dee9-a0f6-4dac-aa17-b3facc472c2b" />
 
 <img width="1827" height="877" alt="image" src="https://github.com/user-attachments/assets/a1c34568-7ff1-4b64-9883-de72e2c3ba09" />
 
